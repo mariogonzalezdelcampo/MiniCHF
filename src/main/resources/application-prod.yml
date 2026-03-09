@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: nchf-converged-charging
+
+logging:
+  level:
+    root: WARN
+    com.minichf: INFO
+
+app:
+  logging:
+    format: json
+    level: INFO
+  server:
+    tls:
+      enabled: false
+  metrics:
+    enabled: true
+  ordering:
+    clock-skew:
+      max-future-seconds: 120
+      max-past-seconds: 86400
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,ready,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: never

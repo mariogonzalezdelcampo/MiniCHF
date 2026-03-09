@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: nchf-converged-charging
+  profiles:
+    active: dev
+
+# Development profile settings
+logging:
+  level:
+    root: DEBUG
+    com.minichf: DEBUG
+    org.springframework: INFO
+
+app:
+  logging:
+    format: text
+    level: DEBUG
+  server:
+    tls:
+      enabled: false
+  metrics:
+    enabled: true
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,ready,metrics

@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: nchf-converged-charging
+  webflux: {}
+
+server:
+  port: 8080
+  http2:
+    enabled: true
+  ssl:
+    enabled: false
+
+logging:
+  level:
+    root: WARN
+    com.minichf: INFO
+
+app:
+  logging:
+    format: text
+    level: INFO
+  server:
+    tls:
+      enabled: false
+  metrics:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: health,ready
+  endpoint:
+    health:
+      enabled: false
+    readiness:
+      enabled: false

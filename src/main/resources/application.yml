@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: nchf-converged-charging
+  webflux: {}
+  http2:
+    enabled: true
+
+server:
+  port: ${SERVER_PORT:8080}
+  http2:
+    enabled: true
+  netty:
+    connection-timeout: 60s
+  shutdown: graceful
+  shutdown-wait-time: 30s
+  ssl:
+    enabled: ${SERVER_TLS_ENABLED:false}
+    key-store: ${SERVER_TLS_KEYSTORE_PATH:}
+    key-store-password: ${SERVER_TLS_KEYSTORE_PASSWORD:}
+    key-store-type: PKCS12
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,ready,metrics
+      base-path: /
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+    metrics:
+      enabled: ${METRICS_ENABLED:true}
+  metrics:
+    enabled: ${METRICS_ENABLED:true}
+    export:
+      prometheus:
+        enabled: ${METRICS_ENABLED:true}
+    tags:
+      application: ${spring.application.name}
+      version: 1.0.0
+
+app:
+  api:
+    base-path: /nchf-convergedcharging/v2
+  server:
+    port: ${SERVER_PORT:8080}
+    tls:
+      enabled: ${SERVER_TLS_ENABLED:false}
+      cert-path: ${SERVER_TLS_CERT_PATH:}
+      key-path: ${SERVER_TLS_KEY_PATH:}
+  limits:
+    max-request-size: ${MAX_REQUEST_SIZE:1048576}
+  session:
+    ttl:
+      seconds: ${SESSION_TTL_SECONDS:-1}
+    overwrite:
+      enabled: ${SESSION_OVERWRITE_ENABLED:false}
+  quota:
+    default:
+      time: ${QUOTA_DEFAULT_TIME:3600}
+      volume-total: ${QUOTA_DEFAULT_VOLUME_TOTAL:1073741824}
+      volume-uplink: ${QUOTA_DEFAULT_VOLUME_UPLINK:536870912}
+      volume-downlink: ${QUOTA_DEFAULT_VOLUME_DOWNLINK:536870912}
+  ordering:
+    idempotency:
+      ttl:
+        seconds: ${ORDERING_IDEMPOTENCY_TTL:300}
+    clock-skew:
+      max-future-seconds: ${ORDERING_MAX_FUTURE_SECONDS:120}
+      max-past-seconds: ${ORDERING_MAX_PAST_SECONDS:86400}
+  cdr:
+    output:
+      dir: ${CDR_OUTPUT_DIR:./cdr/}
+    sync:
+      enabled: ${CDR_SYNC_ENABLED:false}
+  logging:
+    redaction:
+      log-network-identifiers: ${LOGGING_REDACTION_NETWORK:false}
+    format: ${LOGGING_FORMAT:json}
+    level: ${LOGGING_LEVEL:INFO}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL:INFO}
+    com.minichf: ${LOGGING_LEVEL:INFO}
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%thread] %-5level %logger{36} - %msg%n"
