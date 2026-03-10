@@ -6,8 +6,11 @@ import com.minichf.api.model.NetworkSlicingInfo;
 import com.minichf.api.model.Snssai;
 import com.minichf.domain.model.HealthStatus;
 import com.minichf.domain.model.ProblemDetails;
+import com.minichf.domain.model.SessionContext;
+import com.minichf.service.SessionStoreService;
 import com.minichf.util.CorrelationIdUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,9 @@ public class HealthController {
 
     @Value("${spring.application.name:nchf-converged-charging}")
     private String applicationName;
+
+    @Autowired
+    private SessionStoreService sessionStoreService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -539,5 +545,24 @@ public class HealthController {
         ServerHttpRequest request = exchange.getRequest();
         log.info("method={} path={} status={} correlationId={}",
                 request.getMethod(), path, status, correlationId);
+    }
+
+    /**
+     * Log session creation event
+     */
+    private void logSessionCreated(SessionContext sessionContext, String correlationId) {
+        log.info("event=nchf.create.session.created, corrId={}, chargingDataRef={}, nfName={}, invocationSequenceNumber={}",
+                correlationId,
+                sessionContext.getChargingDataRef(),
+                sessionContext.getNfConsumerIdentification() != null ? sessionContext.getNfConsumerIdentification().getNFName() : "unknown",
+                sessionContext.getInvocationSequenceNumber());
+        
+        // Log DEBUG entry with redacted session context
+        try {
+            String sessionJson = objectMapper.writeValueAsString(sessionContext);
+            log.debug("nchf.create.session.created.debug: corrId={}, sessionContext={}", correlationId, redactPII(sessionJson));
+        } catch (Exception e) {
+            log.warn("Failed to serialize session context for debug logging", e);
+        }
     }
 }
