@@ -83,6 +83,13 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!-- OpenAPI Generator -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator</artifactId>
+            <version>6.6.0</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
