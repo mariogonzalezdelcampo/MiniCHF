@@ -8,8 +8,7 @@
 |-------|--------|-----------------|-------|
 | Phase 1 | ✅ COMPLETE | 2026-03-09 | HTTP/2 REST server scaffold with health checks, error handling, and metrics - Verified |
 | Phase 2 | ✅ COMPLETE | 2026-03-10 | OpenAPI model binding and code generation - Implementation completed with manual model creation due to plugin execution issues |
-| Phase 3 | ✅ COMPLETE | 2026-03-10 | Create endpoint implementation with proper validation |
-| Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
+| Phase 3 | ✅ COMPLETE | 2026-03-10 | Create endpoint implementation with proper validation || Phase 4 | ✅ COMPLETE | 2026-03-10 | Decode ChargingDataRequest and logging with redaction || Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
 
 ### Phase 1 Implementation Summary (Completed 2026-03-09)
 
@@ -193,6 +192,57 @@ src/main/resources/
 - The endpoint SHALL NOT write any state or side-effects in this phase beyond logging.
 - Metrics (if enabled) SHOULD record counters for: `nchf_create.decoded.total`, and labeled counts for `ratingGroup` occurrences and `triggerType` occurrences.
 - Unit tests SHALL validate: successful decoding of (a) minimal valid request (only required fields), (b) request with multiple `multipleUnitUsage` and `triggers`, (c) request containing full `pDUSessionChargingInformation`, and (d) rejection of malformed types; tests SHALL also verify that redaction rules are applied in logs.
+
+### Implementation Status (Completed)
+- JSON deserialization implemented using Jackson ObjectMapper
+- Required field validation implemented
+- Structured INFO logging implemented with proper redaction rules
+- DEBUG logging with full redacted request payload implemented
+- Unit tests added to verify functionality
+
+4. Decode ChargingDataRequest payload fields and log them.
+
+### Phase 4 – Requirements (Decode `ChargingDataRequest` and Logging)
+- The endpoint SHALL deserialize the request body into the generated `ChargingDataRequest` model without business processing at this phase.
+- The endpoint SHALL enforce presence of required fields (`nfConsumerIdentification`, `invocationTimeStamp`, `invocationSequenceNumber`) and return `400 Bad Request` with ProblemDetails if any is missing or invalid.
+- The endpoint SHALL reject bodies that contain JSON types incompatible with the schema (e.g., string where number is expected) and return `400 Bad Request` with ProblemDetails.
+- The endpoint SHALL parse and normalize `invocationTimeStamp` to UTC in-memory while preserving original value for echoing in responses in later phases.
+- The endpoint SHALL decode and make available (in-memory) the following top-level fields when present: `subscriberIdentifier`, `nfConsumerIdentification`, `invocationTimeStamp`, `invocationSequenceNumber`, `oneTimeEvent`, `oneTimeEventType`, `notifyUri`, `serviceSpecificationInfo`, `multipleUnitUsage`, `triggers`, `pDUSessionChargingInformation`, `roamingQBCInformation`, `sMSChargingInformation`, `nEFChargingInformation`, `registrationChargingInformation`, `n2ConnectionChargingInformation`, `locationReportingChargingInformation`.
+- The endpoint SHALL NOT perform business validation on nested structures at this phase; it SHALL only ensure syntactic/structural correctness as defined by the schema types.
+- The service SHALL produce a structured INFO log summarizing the decoded request with the following keys (redacted as specified below):
+  - `event`: `nchf.create.request.decoded`
+  - `corrId`: correlation/request ID
+  - `invocationTimeStamp` (ISO 8601), `invocationSequenceNumber`
+  - `nf.nodeFunctionality`, `nf.nFName`, `nf.nFFqdn`, `nf.nFIPv4Address`, `nf.nFIPv6Address` when present
+  - `subscriberIdentifier` (masked), `oneTimeEvent`, `oneTimeEventType`
+  - counts: `multipleUnitUsage.count`, `triggers.count`, `usedUnitContainers.total`, `qfiReports.total`
+  - `requestedRatingGroups`: distinct list of `ratingGroup` values found in `multipleUnitUsage`
+  - `pduSession.pduSessionID`, `pduSession.dnnId`, `pduSession.ratType`, `pduSession.pduType`, `pduSession.sscMode`, `pduSession.snssai.sst`, `pduSession.snssai.sd` when present
+- The service SHALL log detailed DEBUG entries (for troubleshooting) containing the redacted full request payload serialized back to JSON.
+- PII/secret redaction policy for logs SHALL be enforced as follows:
+  - `subscriberIdentifier` (SUPI/GPSI): mask all but last 4 visible characters (e.g., `imsi-************1234`).
+  - `servedPEI`/`userEquipmentInfo`/IMEI-like fields: mask all but last 4 digits.
+  - IP addresses and FQDNs MAY be logged in full; this is configurable via `logging.redaction.logNetworkIdentifiers` (default: false -> mask last octet of IPv4 and compress IPv6).
+  - Any opaque identifiers (e.g., `chargingId`, `afChargingIdentifier`) SHALL be masked except last 4 characters.
+  - Free-text fields (e.g., `serviceSpecificationInfo`) SHALL be truncated to a configurable maximum length (default: 256 chars) in logs.
+- The service SHALL extract and log a compact summary of `multipleUnitUsage`: for each entry, log `ratingGroup` and which `requestedUnit` dimensions are present (`time`, `totalVolume`, `uplinkVolume`, `downlinkVolume`, `serviceSpecificUnits`).
+- The service SHALL extract and log a compact summary of `triggers`: list of `triggerType` and `triggerCategory` values present.
+- The service SHALL extract and log a compact summary of `pDUSessionChargingInformation.pduSessionInformation`: `pduSessionID`, `dnnId`, `ratType`, `pduType`, `sscMode`, `authorizedSessionAMBR` (presence), `subscribedSessionAMBR` (presence), `networkSlicingInfo.sNSSAI.sst`/`sd` when present.
+- The service SHALL extract and log presence flags for optional sections: `roamingQBCInformation`, `sMSChargingInformation`, `nEFChargingInformation`, `registrationChargingInformation`, `n2ConnectionChargingInformation`, `locationReportingChargingInformation`.
+- The endpoint SHALL NOT write any state or side-effects in this phase beyond logging.
+- Metrics (if enabled) SHOULD record counters for: `nchf_create.decoded.total`, and labeled counts for `ratingGroup` occurrences and `triggerType` occurrences.
+- Unit tests SHALL validate: successful decoding of (a) minimal valid request (only required fields), (b) request with multiple `multipleUnitUsage` and `triggers`, (c) request containing full `pDUSessionChargingInformation`, and (d) rejection of malformed types; tests SHALL also verify that redaction rules are applied in logs.
+
+### Implementation Status (Completed)
+- JSON deserialization implemented using Jackson ObjectMapper
+- Required field validation implemented
+- Structured INFO logging implemented with proper redaction rules
+- DEBUG logging with full redacted request payload implemented
+- Unit tests added to verify functionality
+
+## Phase 4 Documentation
+- [PHASE4_SUMMARY.md](PHASE4_SUMMARY.md) - Detailed implementation summary
+- [PHASE4_VERIFICATION.md](PHASE4_VERIFICATION.md) - Verification checklist and test results
 
 5. Generate a server-side ChargingDataRef (UUID) and create session context.
 

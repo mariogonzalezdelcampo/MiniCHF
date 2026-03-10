@@ -239,4 +239,6 @@ class HealthControllerTest {
                 .expectStatus().isNoContent()
                 .expectHeader().valueMatches("Allow", "POST, OPTIONS");
     }
+
+// ...existing code...
 }

@@ -130,6 +130,17 @@ All configuration can also be set in `application.yml` or environment-specific f
 - `OPTIONS /nchf-convergedcharging/v2/chargingdata/{ChargingDataRef}/update` - List allowed methods
 - `OPTIONS /nchf-convergedcharging/v2/chargingdata/{ChargingDataRef}/release` - List allowed methods
 
+## Phase 4 Implementation
+
+Phase 4 implements decoding of `ChargingDataRequest` payloads and structured logging with proper redaction rules:
+
+- JSON deserialization of request payloads into `ChargingDataRequest` model
+- Required field validation (`nfConsumerIdentification`, `invocationTimeStamp`, `invocationSequenceNumber`)
+- Structured INFO logging with comprehensive request summary
+- DEBUG logging with full redacted request payload
+- PII redaction for sensitive fields (subscriber identifiers, etc.)
+- All existing error handling maintained
+
 ## Request/Response Format
 
 All requests and responses use `application/json` content type with UTF-8 encoding.
