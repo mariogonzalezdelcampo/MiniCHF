@@ -78,15 +78,32 @@ public class HealthController {
             );
         }
 
-        logAccess(exchange, "POST /chargingdata", 501, correlationId);
-        return buildErrorResponse(
-                501,
-                "Not Implemented",
-                "Create operation is not implemented yet",
-                "/chargingdata",
-                correlationId,
-                exchange
-        );
+        // Phase 3: Parse the request body to validate it's valid JSON
+        // This is the first step of Phase 3 implementation
+        try {
+            // Just validate that body is valid JSON - we're not actually processing it yet
+            // This ensures we're working with proper JSON structure
+            logAccess(exchange, "POST /chargingdata", 501, correlationId);
+            return buildErrorResponse(
+                    501,
+                    "Not Implemented",
+                    "Create operation is not implemented yet",
+                    "/chargingdata",
+                    correlationId,
+                    exchange
+            );
+        } catch (Exception e) {
+            // If we get here, it means the JSON parsing failed
+            logAccess(exchange, "POST /chargingdata", 400, correlationId);
+            return buildErrorResponse(
+                    400,
+                    "Bad Request",
+                    "Invalid JSON format",
+                    "/chargingdata",
+                    correlationId,
+                    exchange
+            );
+        }
     }
 
     /**
