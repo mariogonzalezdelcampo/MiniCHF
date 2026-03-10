@@ -257,7 +257,30 @@ public class HealthController {
             // Log the decoded request with proper redaction rules (Phase 4)
             logDecodedRequest(chargingDataRequest, correlationId, exchange.getRequest());
             
-            // Continue with Phase 3 behavior - return 501 Not Implemented
+            // Phase 5: Generate ChargingDataRef and create session context
+            UUID chargingDataRef = UUID.randomUUID();
+            
+            // Create session context
+            SessionContext sessionContext = SessionContext.builder()
+                    .chargingDataRef(chargingDataRef)
+                    .sessionCreationTimestamp(LocalDateTime.now())
+                    .invocationTimeStamp(chargingDataRequest.getInvocationTimeStamp())
+                    .invocationSequenceNumber(chargingDataRequest.getInvocationSequenceNumber())
+                    .nfConsumerIdentification(chargingDataRequest.getNfConsumerIdentification())
+                    .chargingDataRequest(chargingDataRequest)
+                    .state("ACTIVE_CREATE_PENDING")
+                    .correlationId(correlationId)
+                    .build();
+            
+            // Store session context
+            sessionStoreService.put(chargingDataRef, sessionContext);
+            
+            // Log session creation
+            logSessionCreated(sessionContext, correlationId);
+            
+            // Phase 6: Generate 201 ChargingDataResponse with default quota grants
+            // For now, we still return 501 as the actual implementation will be in later phases
+            // but we can generate the response model for future use
             logAccess(exchange, "POST /chargingdata", 501, correlationId);
             return buildErrorResponse(
                     501,

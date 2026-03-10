@@ -10,8 +10,7 @@
 | Phase 2 | ✅ COMPLETE | 2026-03-10 | OpenAPI model binding and code generation - Implementation completed with manual model creation due to plugin execution issues |
 | Phase 3 | ✅ COMPLETE | 2026-03-10 | Create endpoint implementation with proper validation |
 | Phase 4 | ✅ COMPLETE | 2026-03-10 | Decode ChargingDataRequest and logging with redaction |
-| Phase 5 | ✅ COMPLETE | 2026-03-10 | Generate ChargingDataRef and create session context |
-| Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
+| Phase 5 | ✅ COMPLETE | 2026-03-10 | Generate ChargingDataRef and create session context || Phase 6 | ✅ COMPLETE | 2026-03-10 | Build 201 ChargingDataResponse with default quota grant || Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
 
 ### Phase 1 Implementation Summary (Completed 2026-03-09)
 
@@ -251,6 +250,10 @@ src/main/resources/
 - [PHASE5_SUMMARY.md](PHASE5_SUMMARY.md) - Detailed implementation summary
 - [PHASE5_VERIFICATION.md](PHASE5_VERIFICATION.md) - Verification checklist and test results
 
+## Phase 6 Documentation
+- [PHASE6_SUMMARY.md](PHASE6_SUMMARY.md) - Detailed implementation summary
+- [PHASE6_VERIFICATION.md](PHASE6_VERIFICATION.md) - Verification checklist and test results
+
 5. Generate a server-side ChargingDataRef (UUID) and create session context.
 
 ### Phase 5 – Requirements (Generate `ChargingDataRef` and Create Session Context)
@@ -295,6 +298,15 @@ src/main/resources/
 - The service SHALL log at INFO level: `event=nchf.create.response.sent`, `ChargingDataRef`, granted rating groups, and quota amounts.
 - A DEBUG log SHALL include the full (redacted) serialized response JSON.
 - Unit tests SHALL validate: (a) correct 201 status and body shape; (b) correct mirroring of invocation fields; (c) correct generation of MUIs; (d) default quota logic; (e) absence of unexpected fields; (f) presence and correctness of Location header.
+
+### Implementation Status (Completed)
+- ChargingDataResponse model created with all required fields
+- MultipleUnitInformation model created with ratingGroup, resultCode, and grantedUnit
+- GrantedUnit model created with time, totalVolume, uplinkVolume, downlinkVolume, and serviceSpecificUnits
+- ChargingDataResponseService created to generate responses with default quota grants
+- Location header generated with proper URI
+- 201 Created response returned instead of 501 Not Implemented
+- Unit tests added to verify functionality
 
 7. Implement in-memory session store keyed by ChargingDataRef.
 
