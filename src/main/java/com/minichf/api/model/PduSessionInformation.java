@@ -31,11 +31,47 @@ public class PduSessionInformation {
     private String sscMode;
     
     @JsonProperty("authorizedSessionAMBR")
-    private Boolean authorizedSessionAMBR;
+    private Ambr authorizedSessionAMBR;
     
     @JsonProperty("subscribedSessionAMBR")
-    private Boolean subscribedSessionAMBR;
+    private Ambr subscribedSessionAMBR;
     
     @JsonProperty("networkSlicingInfo")
     private NetworkSlicingInfo networkSlicingInfo;
+    
+    @JsonProperty("hPlmnId")
+    private PLMNID hPlmnId;
+    
+    @JsonProperty("servingNetworkFunctionID")
+    private ServingNetworkFunctionID servingNetworkFunctionID;
+    
+    @JsonProperty("chargingCharacteristics")
+    private String chargingCharacteristics;
+    
+    @JsonProperty("chargingCharacteristicsSelectionMode")
+    private String chargingCharacteristicsSelectionMode;
+    
+    @JsonProperty("chargingRuleBaseName")
+    private String chargingRuleBaseName;
+    
+    @JsonProperty("startTime")
+    private String startTime;
+    
+    @JsonProperty("3gppPSDataOffStatus")
+    private String _3gppPSDataOffStatus;
+    
+    @JsonProperty("pduAddress")
+    private Object pduAddress;
+    
+    @JsonProperty("diagnostics")
+    private Object diagnostics;
+    
+    @JsonProperty("authorizedQoSInformation")
+    private Object authorizedQoSInformation;
+    
+    @JsonProperty("subscribedQoSInformation")
+    private Object subscribedQoSInformation;
+    
+    @JsonProperty("servingCNPlmnId")
+    private PLMNID servingCNPlmnId;
 }

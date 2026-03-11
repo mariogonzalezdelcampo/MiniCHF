@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -21,9 +20,9 @@ public class SessionContext {
     
     private UUID chargingDataRef;
     
-    private LocalDateTime sessionCreationTimestamp;
+    private String sessionCreationTimestamp;
     
-    private LocalDateTime invocationTimeStamp;
+    private String invocationTimeStamp;
     
     private Integer invocationSequenceNumber;
     

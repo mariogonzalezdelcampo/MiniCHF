@@ -50,7 +50,7 @@ public class HealthController {
         StringBuilder logMessage = new StringBuilder();
         logMessage.append("event=nchf.create.request.decoded");
         logMessage.append(", corrId=").append(correlationId);
-        logMessage.append(", invocationTimeStamp=").append(request.getInvocationTimeStamp().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        logMessage.append(", invocationTimeStamp=").append(request.getInvocationTimeStamp());
         logMessage.append(", invocationSequenceNumber=").append(request.getInvocationSequenceNumber());
         
         // Add nfConsumerIdentification if present
@@ -263,7 +263,7 @@ public class HealthController {
             // Create session context
             SessionContext sessionContext = SessionContext.builder()
                     .chargingDataRef(chargingDataRef)
-                    .sessionCreationTimestamp(LocalDateTime.now())
+                    .sessionCreationTimestamp(LocalDateTime.now().toString())
                     .invocationTimeStamp(chargingDataRequest.getInvocationTimeStamp())
                     .invocationSequenceNumber(chargingDataRequest.getInvocationSequenceNumber())
                     .nfConsumerIdentification(chargingDataRequest.getNfConsumerIdentification())

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * UsedUnitContainer model
  */
@@ -32,4 +34,25 @@ public class UsedUnitContainer {
     
     @JsonProperty("serviceSpecificUnits")
     private Long serviceSpecificUnits;
+    
+    @JsonProperty("serviceId")
+    private String serviceId;
+    
+    @JsonProperty("quotaManagementIndicator")
+    private String quotaManagementIndicator;
+    
+    @JsonProperty("triggers")
+    private List<Trigger> triggers;
+    
+    @JsonProperty("triggerTimestamp")
+    private String triggerTimestamp;
+    
+    @JsonProperty("eventTimeStamps")
+    private String eventTimeStamps;
+    
+    @JsonProperty("localSequenceNumber")
+    private Integer localSequenceNumber;
+    
+    @JsonProperty("pDUContainerInformation")
+    private PDUContainerInformation pDUContainerInformation;
 }

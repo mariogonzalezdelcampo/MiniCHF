@@ -29,4 +29,7 @@ public class NFIdentification {
     
     @JsonProperty("nFIPv6Address")
     private String nFIPv6Address;
+    
+    @JsonProperty("nFPLMNID")
+    private PLMNID nFPLMNID;
 }

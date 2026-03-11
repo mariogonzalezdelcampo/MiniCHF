@@ -26,7 +26,7 @@ public class ChargingDataRequest {
     private NFIdentification nfConsumerIdentification;
     
     @JsonProperty("invocationTimeStamp")
-    private LocalDateTime invocationTimeStamp;
+    private String invocationTimeStamp;
     
     @JsonProperty("invocationSequenceNumber")
     private Integer invocationSequenceNumber;

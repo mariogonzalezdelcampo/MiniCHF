@@ -25,4 +25,7 @@ public class MultipleUnitUsage {
     
     @JsonProperty("usedUnitContainer")
     private List<UsedUnitContainer> usedUnitContainer;
+    
+    @JsonProperty("uPFID")
+    private String uPFID;
 }

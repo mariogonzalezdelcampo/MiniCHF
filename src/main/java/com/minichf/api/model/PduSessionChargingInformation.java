@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 /**
  * PduSessionChargingInformation model
  */
@@ -15,8 +17,30 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PduSessionChargingInformation {
     
+    @JsonProperty("chargingId")
+    private String chargingId;
+    
+    @JsonProperty("homeProvidedChargingId")
+    private String homeProvidedChargingId;
+    
+    @JsonProperty("userInformation")
+    private UserInformation userInformation;
+    
+    @JsonProperty("userLocationinfo")
+    private Object userLocationinfo;
+    
+    @JsonProperty("presenceReportingAreaInformation")
+    private Map<String, Object> presenceReportingAreaInformation;
+    
+    @JsonProperty("uetimeZone")
+    private String uetimeZone;
+    
     @JsonProperty("pduSessionInformation")
     private PduSessionInformation pduSessionInformation;
     
-    // ... other fields would be here based on the OpenAPI spec
+    @JsonProperty("unitCountInactivityTimer")
+    private Integer unitCountInactivityTimer;
+    
+    @JsonProperty("rANSecondaryRATUsageReport")
+    private Object rANSecondaryRATUsageReport;
 }
