@@ -13,6 +13,7 @@
 | Phase 5 | ✅ COMPLETE | 2026-03-10 | Generate ChargingDataRef and create session context |
 | Phase 6 | ✅ COMPLETE | 2026-03-10 | Build 201 ChargingDataResponse with default quota grant |
 | Phase 7 | ✅ COMPLETE | 2026-03-11 | In-memory session store with TTL and duplicate handling |
+| Phase 8 | ✅ COMPLETE | 2026-03-11 | Expose Update endpoint stub |
 | Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
 
 ### Phase 1 Implementation Summary (Completed 2026-03-09)
@@ -303,15 +304,18 @@ src/main/resources/
 - Unit tests SHALL validate: (a) correct 201 status and body shape; (b) correct mirroring of invocation fields; (c) correct generation of MUIs; (d) default quota logic; (e) absence of unexpected fields; (f) presence and correctness of Location header.
 
 ### Implementation Status (Completed)
-- In-memory session store implemented using ConcurrentHashMap
-- Session store supports all required operations: put, get, update, remove
-- Thread-safe access implemented with concurrent map
-- TTL expiration mechanism support added (configurable via session.ttl.seconds)
-- Session store maintains lastAccessTimestamp for each session
-- Duplicate session handling with overwrite policy (configurable via session.overwrite.enabled)
-- INFO and DEBUG logging implemented for all operations
-- Session context preserves all required fields from earlier phases
-- Unit tests added to verify thread-safety and session management
+- POST handler registered at `/chargingdata/{ChargingDataRef}/update` under base `/nchf-convergedcharging/v2`
+- Content-Type validation implemented (`application/json` required)
+- Accept header validation implemented (`application/json` required)
+- UUID format validation implemented for ChargingDataRef
+- Request body validation implemented (empty body returns 400)
+- Request size limits enforced as per Phase 1 requirements
+- 501 Not Implemented response returned for valid syntax but unimplemented business logic
+- OPTIONS method implemented for `/chargingdata/{ChargingDataRef}/update` returning `204 No Content` with `Allow` header listing `POST, OPTIONS`
+- Method not allowed returns 405 with proper `Allow` header
+- Structured access logs implemented with correlation ID, method, path, status code, and latency
+- DEBUG logs include redacted raw request payload
+- Unit tests added to verify all validation and error handling scenarios
 
 7. Implement in-memory session store keyed by ChargingDataRef.
 
