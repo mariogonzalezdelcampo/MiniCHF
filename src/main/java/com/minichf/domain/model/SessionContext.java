@@ -33,4 +33,6 @@ public class SessionContext {
     private String state;
     
     private String correlationId;
+    
+    private String lastAccessTimestamp;
 }

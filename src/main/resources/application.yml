@@ -63,6 +63,10 @@ app:
       volume-total: ${QUOTA_DEFAULT_VOLUME_TOTAL:1073741824}
       volume-uplink: ${QUOTA_DEFAULT_VOLUME_UPLINK:536870912}
       volume-downlink: ${QUOTA_DEFAULT_VOLUME_DOWNLINK:536870912}
+      service-specific-units: ${QUOTA_DEFAULT_SERVICE_SPECIFIC_UNITS:100}
+  session:
+    failover:
+      enabled: ${SESSION_FAILOVER_ENABLED:false}
   ordering:
     idempotency:
       ttl:

@@ -23,9 +23,10 @@
 
 ### 4. Configuration Support
 - [x] `quota.default.time` configuration property added (default: 3600)
-- [x] `quota.default.volume.total` configuration property added (default: 1048576)
-- [x] `quota.default.volume.uplink` configuration property added (default: 524288)
-- [x] `quota.default.volume.downlink` configuration property added (default: 524288)
+- [x] `quota.default.volume.total` configuration property added (default: 1073741824)
+- [x] `quota.default.volume.uplink` configuration property added (default: 536870912)
+- [x] `quota.default.volume.downlink` configuration property added (default: 536870912)
+- [x] `quota.default.service.specific.units` configuration property added (default: 100)
 - [x] `session.failover.enabled` configuration property added (default: false)
 
 ### 5. Logging
@@ -76,9 +77,9 @@ Expected Response: 201 Created with multipleUnitInformation
       "resultCode": "SUCCESS",
       "grantedUnit": {
         "time": 3600,
-        "totalVolume": 1048576,
-        "uplinkVolume": 524288,
-        "downlinkVolume": 524288,
+        "totalVolume": 1073741824,
+        "uplinkVolume": 536870912,
+        "downlinkVolume": 536870912,
         "serviceSpecificUnits": 100
       }
     }
@@ -93,11 +94,6 @@ Expected Response: 201 Created with multipleUnitInformation
 - [x] Each MUI has correct ratingGroup, resultCode, and grantedUnit
 - [x] GrantedUnit includes default quota values
 - [x] Location header present with correct URI
-
-### 3. Session Failover Configuration
-```powershell
-curl -X POST http://localhost:8080/nchf-convergedcharging/v2/chargingdata -H "Content-Type: application/json" -d '{"nfConsumerIdentification":{"nodeFunctionality":"pcf","nFName":"test-pcf"},"invocationTimeStamp":"2024-01-15T10:30:45.123+01:00","invocationSequenceNumber":1}'
-```
 
 With configuration `session.failover.enabled=true`
 

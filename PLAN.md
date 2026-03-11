@@ -10,7 +10,10 @@
 | Phase 2 | ✅ COMPLETE | 2026-03-10 | OpenAPI model binding and code generation - Implementation completed with manual model creation due to plugin execution issues |
 | Phase 3 | ✅ COMPLETE | 2026-03-10 | Create endpoint implementation with proper validation |
 | Phase 4 | ✅ COMPLETE | 2026-03-10 | Decode ChargingDataRequest and logging with redaction |
-| Phase 5 | ✅ COMPLETE | 2026-03-10 | Generate ChargingDataRef and create session context || Phase 6 | ✅ COMPLETE | 2026-03-10 | Build 201 ChargingDataResponse with default quota grant || Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
+| Phase 5 | ✅ COMPLETE | 2026-03-10 | Generate ChargingDataRef and create session context |
+| Phase 6 | ✅ COMPLETE | 2026-03-10 | Build 201 ChargingDataResponse with default quota grant |
+| Phase 7 | ✅ COMPLETE | 2026-03-11 | In-memory session store with TTL and duplicate handling |
+| Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
 
 ### Phase 1 Implementation Summary (Completed 2026-03-09)
 
@@ -300,13 +303,15 @@ src/main/resources/
 - Unit tests SHALL validate: (a) correct 201 status and body shape; (b) correct mirroring of invocation fields; (c) correct generation of MUIs; (d) default quota logic; (e) absence of unexpected fields; (f) presence and correctness of Location header.
 
 ### Implementation Status (Completed)
-- ChargingDataResponse model created with all required fields
-- MultipleUnitInformation model created with ratingGroup, resultCode, and grantedUnit
-- GrantedUnit model created with time, totalVolume, uplinkVolume, downlinkVolume, and serviceSpecificUnits
-- ChargingDataResponseService created to generate responses with default quota grants
-- Location header generated with proper URI
-- 201 Created response returned instead of 501 Not Implemented
-- Unit tests added to verify functionality
+- In-memory session store implemented using ConcurrentHashMap
+- Session store supports all required operations: put, get, update, remove
+- Thread-safe access implemented with concurrent map
+- TTL expiration mechanism support added (configurable via session.ttl.seconds)
+- Session store maintains lastAccessTimestamp for each session
+- Duplicate session handling with overwrite policy (configurable via session.overwrite.enabled)
+- INFO and DEBUG logging implemented for all operations
+- Session context preserves all required fields from earlier phases
+- Unit tests added to verify thread-safety and session management
 
 7. Implement in-memory session store keyed by ChargingDataRef.
 

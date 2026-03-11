@@ -2,11 +2,13 @@ package com.minichf.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minichf.api.model.ChargingDataRequest;
+import com.minichf.api.model.ChargingDataResponse;
 import com.minichf.api.model.NetworkSlicingInfo;
 import com.minichf.api.model.Snssai;
 import com.minichf.domain.model.HealthStatus;
 import com.minichf.domain.model.ProblemDetails;
 import com.minichf.domain.model.SessionContext;
+import com.minichf.service.ChargingDataResponseService;
 import com.minichf.service.SessionStoreService;
 import com.minichf.util.CorrelationIdUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,9 @@ public class HealthController {
 
     @Autowired
     private SessionStoreService sessionStoreService;
+    
+    @Autowired
+    private ChargingDataResponseService chargingDataResponseService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -279,6 +284,10 @@ public class HealthController {
             logSessionCreated(sessionContext, correlationId);
             
             // Phase 6: Generate 201 ChargingDataResponse with default quota grants
+            // Generate the response with default quota grants
+            ChargingDataResponse response = chargingDataResponseService.generateCreateResponse(sessionContext, 
+                    chargingDataRequest.getMultipleUnitUsage());
+            
             // For now, we still return 501 as the actual implementation will be in later phases
             // but we can generate the response model for future use
             logAccess(exchange, "POST /chargingdata", 501, correlationId);

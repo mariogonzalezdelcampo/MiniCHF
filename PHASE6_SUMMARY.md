@@ -31,7 +31,11 @@ Phase 6 focuses on building the 201 ChargingDataResponse with default quota gran
   - `downlinkVolume` (default quota)
   - `serviceSpecificUnits` (default quota)
 
-### 4. Response Generation Service
+### 4. InvocationResult Model
+- Created `InvocationResult` model with:
+  - `error` field (optional, empty in successful responses)
+
+### 5. Response Generation Service
 - Created `ChargingDataResponseService` to:
   - Generate proper 201 Created responses
   - Apply default quota grants based on configuration
@@ -39,15 +43,16 @@ Phase 6 focuses on building the 201 ChargingDataResponse with default quota gran
   - Handle `sessionFailover` based on configuration
   - Generate Location header with proper URI
 
-### 5. Configuration Support
+### 6. Configuration Support
 - Added configuration properties for default quotas:
   - `quota.default.time` (default: 3600 seconds)
-  - `quota.default.volume.total` (default: 1048576 bytes)
-  - `quota.default.volume.uplink` (default: 524288 bytes)
-  - `quota.default.volume.downlink` (default: 524288 bytes)
+  - `quota.default.volume.total` (default: 1073741824 bytes)
+  - `quota.default.volume.uplink` (default: 536870912 bytes)
+  - `quota.default.volume.downlink` (default: 536870912 bytes)
+  - `quota.default.service.specific.units` (default: 100 units)
 - Added `session.failover.enabled` configuration (default: false)
 
-### 6. Integration
+### 7. Integration
 - Modified `HealthController.createChargingData()` to return 201 Created instead of 501 Not Implemented
 - Integrated with existing session management from Phase 5
 - Properly handles Location header generation
