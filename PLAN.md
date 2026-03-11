@@ -18,6 +18,7 @@
 | Phase 10 | ✅ COMPLETE | 2026-03-11 | Build 200 Update response with default granted units |
 | Phase 11 | ✅ COMPLETE | 2026-03-11 | Expose Release endpoint stub |
 | Phase 12 | ✅ COMPLETE | 2026-03-11 | Handle Release semantics and return 204 No Content |
+| Phase 13 | ✅ COMPLETE | 2026-03-11 | Implement notifyUri callback consumer for charging notifications |
 | Phase 4-20 | ⏳ PENDING | - | Business logic and advanced features |
 
 ### Phase 1 Implementation Summary (Completed 2026-03-09)
