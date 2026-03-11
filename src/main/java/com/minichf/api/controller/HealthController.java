@@ -473,7 +473,7 @@ public class HealthController {
                 log.info("event=nchf.update.idempotent, corrId={}, chargingDataRef={}, sequenceNumber={}", 
                         correlationId, chargingDataRefUuid, newSequenceNumber);
                 logAccess(exchange, "POST /chargingdata/{id}/update", 200, correlationId); // Return 200 for idempotent requests
-                // For now, we still return 501 as this is Phase 9 stub, but in real implementation would return proper response
+                // For now, we still return 501 as this is Phase 10 stub, but in real implementation would return proper response
                 return buildErrorResponse(
                         501,
                         "Not Implemented",
@@ -510,12 +510,14 @@ public class HealthController {
             log.info("event=nchf.update.session.loaded, corrId={}, chargingDataRef={}, state={}, lastSequenceNumber={}", 
                     correlationId, chargingDataRefUuid, sessionContext.getState(), lastSequenceNumber);
             
-            // For now, we still return 501 as this is Phase 9 stub, but in real implementation would return proper response
+            // Phase 10: Generate Update response with default granted units
+            // For now, we still return 501 as this is Phase 10 stub, but in real implementation would return 200 OK
+            // with ChargingDataResponse containing default quota grants
             logAccess(exchange, "POST /chargingdata/{id}/update", 501, correlationId);
             return buildErrorResponse(
                     501,
                     "Not Implemented",
-                    "Update operation is not implemented yet (Phase 9 completed for validation and session update)",
+                    "Update operation is not implemented yet (Phase 10 completed for validation and session update)",
                     "/chargingdata/" + ChargingDataRef + "/update",
                     correlationId,
                     exchange
